@@ -1,3 +1,5 @@
+import { compare } from "bcryptjs";
+
 import { AppError } from "../../../../shared/errors/AppError";
 import { InMemoryUsersRepository } from "../../repositories/in-memory/InMemoryUsersRepository";
 import { CreateUserUseCase } from "./CreateUserUseCase";
@@ -14,7 +16,7 @@ describe("Create User", () => {
   it("should be able to create a new user", async () => {
     const user = await createUserUseCase.execute({
       name: "UserTest",
-      email: "user@test.com",
+      email: "email@test.com",
       password: "1234",
     });
 
@@ -22,20 +24,21 @@ describe("Create User", () => {
     expect(user).toHaveProperty("email");
     expect(user).toHaveProperty("password");
     expect(user.name).toEqual("UserTest");
-    expect(user.email).toEqual("user@test.com");
+    expect(user.email).toEqual("email@test.com");
+    expect(compare(user.password, "1234")).toBeTruthy();
   });
 
-  it("should not be able to create an already existing user", async () => {
-    expect(async () => {
+  it("should not be able to create a user with an already used email", async () => {
+    await expect(async () => {
       await createUserUseCase.execute({
-        name: "UserTest",
+        name: "User",
         email: "user@test.com",
-        password: "1234",
+        password: "12345",
       });
       await createUserUseCase.execute({
-        name: "UserTest",
+        name: "User1",
         email: "user@test.com",
-        password: "1234",
+        password: "12345",
       });
     }).rejects.toBeInstanceOf(AppError);
   });
