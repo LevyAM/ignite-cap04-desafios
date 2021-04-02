@@ -1,6 +1,7 @@
 import { Statement } from "../entities/Statement";
 
 export class BalanceMap {
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static toDTO({
     statement,
     balance,
