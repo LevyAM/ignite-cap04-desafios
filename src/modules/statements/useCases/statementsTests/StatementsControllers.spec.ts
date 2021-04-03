@@ -124,7 +124,7 @@ describe("Statements Deposit", () => {
     const url = `/api/v1/statements/${id}`;
 
     const response = await request(app)
-      .post(url)
+      .get(url)
       .set({ Authorization: `Bearer ${token}` });
 
     expect(response.status).toBe(200);
